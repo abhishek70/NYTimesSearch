@@ -1,5 +1,7 @@
 package com.example.abhishek.nytimessearch.models;
 
+import com.example.abhishek.nytimessearch.networking.ArticleClient;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,9 @@ import java.util.ArrayList;
  */
 
 public class Article {
+
+    /** Tag for the log messages */
+    private static final String LOG_TAG = Article.class.getSimpleName();
 
     // Member Variables
     private String mWebUrl, mHeadline, mThumbNail;
