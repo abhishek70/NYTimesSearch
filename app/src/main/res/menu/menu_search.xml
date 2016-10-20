@@ -3,16 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.abhishek.nytimessearch.activities.SearchActivity" >
 
+    <!-- Search Menu Item -->
     <item android:id="@+id/action_search"
         android:title="@string/action_search"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always" />
+    <!-- Search Menu Item -->
 
+    <!-- Filters Menu Item -->
     <item android:id="@+id/action_filters"
         android:title="@string/action_filters"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         app:showAsAction="always" />
+    <!-- Filters Menu Item -->
 
 </menu>

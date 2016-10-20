@@ -1,14 +1,12 @@
 package com.example.abhishek.nytimessearch.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,21 +26,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-import static com.google.android.gms.internal.zzsp.LO;
-
 public class SearchActivity extends AppCompatActivity {
 
     /** Tag for the log messages */
     private static final String LOG_TAG = SearchActivity.class.getSimpleName();
 
-
-    // Artcile client for building url for fetching Article data
+    // Article client for building url for fetching Article data
     private ArticleClient articleClient;
 
+    // Article List
     private ArrayList<Article> articles;
 
+    // Article Adapter
     private ArticleArrayAdapter articleArrayAdapter;
 
+
+
+    // Recycler View for holding Articles
     @BindView(R.id.rvArticles) RecyclerView rvArticles;
 
 
@@ -94,6 +94,14 @@ public class SearchActivity extends AppCompatActivity {
      */
     private void setupViews() {
 
+        int numCols = 2;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            numCols = 3;
+        }
+        StaggeredGridLayoutManager gridLayoutManager =
+                new StaggeredGridLayoutManager(numCols, StaggeredGridLayoutManager.VERTICAL);
+        rvArticles.setLayoutManager(gridLayoutManager);
+
     }
 
     /**
@@ -112,9 +120,6 @@ public class SearchActivity extends AppCompatActivity {
         // Attach the adapter to the recyclerview to populate items
         rvArticles.setAdapter(articleArrayAdapter);
 
-        rvArticles.setLayoutManager(new LinearLayoutManager(this));
-
-        //
         articleClient.getArticles(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -129,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     Log.d(LOG_TAG, articles.toString());
 
-                    articleArrayAdapter.notifyDataSetChanged();
+                    articleArrayAdapter.notifyItemRangeInserted(0, 10);
 
                 } catch (JSONException e) {
 

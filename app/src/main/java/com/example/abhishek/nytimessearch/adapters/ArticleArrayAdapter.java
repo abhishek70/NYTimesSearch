@@ -17,6 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.google.android.gms.internal.zznu.iv;
 
 /**
@@ -25,8 +28,11 @@ import static com.google.android.gms.internal.zznu.iv;
 
 public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapter.ViewHolder> {
 
+    /** Tag for the log messages */
+    private static final String LOG_TAG = ArticleArrayAdapter.class.getSimpleName();
+
     /** Member Variables */
-    // Store a member variable for the contacts
+    // Store a member variable for the articles
     private List<Article> mArticles;
 
     // Store the context for easy access
@@ -34,7 +40,7 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
 
 
     /**
-     * Pass in the contact array into the constructor
+     * Pass in the articles array into the constructor
      * @param context
      * @param articles
      */
@@ -44,7 +50,7 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
     }
 
     /**
-     * Getter
+     * Getter for Articles
      * @return
      */
     public List<Article> getArticles() {
@@ -52,31 +58,48 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
     }
 
     /**
-     * Getter
+     * Getter for Context
      * @return
      */
     public Context getContext() {
         return mContext;
     }
 
+
+
     /**
-     * View Holder
+     * View Holder Class
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ImageView ivImage;
-        public TextView tvHeadline;
+        // Views
+        @BindView(R.id.ivImage) ImageView ivImage;
+        @BindView(R.id.tvHeadline) TextView tvHeadline;
 
+//        ImageView ivImage;
+//        TextView tvHeadline;
 
-        public ViewHolder(View itemView) {
+        /**
+         * View Holder Constructor
+         * @param itemView
+         */
+        ViewHolder(View itemView) {
 
             super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
 
+//            ivImage     = (ImageView) itemView.findViewById(R.id.ivImage);
+//            tvHeadline  = (TextView) itemView.findViewById(R.id.tvHeadline);
 
-            ivImage     = (ImageView) itemView.findViewById(R.id.ivImage);
-            tvHeadline  = (TextView) itemView.findViewById(R.id.tvHeadline);
         }
 
+        @Override
+        public void onClick(View view) {
+            int pos = getLayoutPosition();
+            Article article = mArticles.get(pos);
+
+        }
     }
 
     /**
@@ -95,8 +118,7 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
         View contactView = inflater.inflate(R.layout.item_article, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
     /**
@@ -114,6 +136,7 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
         TextView tvHeadline = holder.tvHeadline;
         tvHeadline.setText(article.getHeadline());
 
+        // Article Image using Picasso
         ImageView ivImage = holder.ivImage;
         ivImage.setImageResource(0);
         String thumbnail = article.getThumbNail();
@@ -124,11 +147,12 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
                     .into(ivImage);
         }
 
-
-
-
     }
 
+    /**
+     * Articles Array Size
+     * @return
+     */
     @Override
     public int getItemCount() {
         return mArticles.size();

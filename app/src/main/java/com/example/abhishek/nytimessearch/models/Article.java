@@ -61,8 +61,23 @@ public class Article {
             JSONArray multimedia = jsonObject.getJSONArray("multimedia");
 
             if(multimedia.length() > 0) {
-                JSONObject multimediaJson = multimedia.getJSONObject(0);
-                this.mThumbNail = "http://www.nytimes.com/" + multimediaJson.getString("url");
+                String thumbNail = null;
+
+                for(int j = 0; j < multimedia.length(); j++) {
+
+                    JSONObject multimediaJson = multimedia.getJSONObject(j);
+
+                    if(multimediaJson.getString("subtype") == "thumbnail") {
+                        thumbNail = multimediaJson.getString("url");
+                        break;
+                    }
+                }
+                //JSONObject multimediaJson = multimedia.getJSONObject(0);
+                //this.mThumbNail = "http://www.nytimes.com/" + multimediaJson.getString("url");
+                if (thumbNail == null) {
+                    thumbNail = multimedia.getJSONObject(0).getString("url");
+                }
+                this.mThumbNail = "http://www.nytimes.com/" + thumbNail;
             } else {
                 this.mThumbNail = "";
             }
