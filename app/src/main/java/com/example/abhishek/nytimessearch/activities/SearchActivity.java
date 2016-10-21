@@ -134,7 +134,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     Log.d(LOG_TAG, articles.toString());
 
-                    articleArrayAdapter.notifyItemRangeInserted(0, 10);
+                    articleArrayAdapter.notifyItemRangeInserted(articleArrayAdapter.getItemCount(), articles.size());
+                    //articleArrayAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
 

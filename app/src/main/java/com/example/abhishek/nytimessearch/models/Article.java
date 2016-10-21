@@ -17,6 +17,7 @@ public class Article {
     /** Tag for the log messages */
     private static final String LOG_TAG = Article.class.getSimpleName();
 
+
     // Member Variables
     private String mWebUrl, mHeadline, mThumbNail;
 
@@ -48,6 +49,21 @@ public class Article {
 
 
     /**
+     * Return the view type to adapter
+     * With Thumbnail = 1
+     * Without Thumbnail = 0
+     * @return
+     */
+    public int getViewType() {
+
+        if(mThumbNail != "")
+            return 1;
+
+        return 0;
+    }
+
+
+    /**
      * Constructor
      * @param jsonObject
      */
@@ -55,8 +71,8 @@ public class Article {
 
         try {
 
-            this.mWebUrl    =   jsonObject.getString("web_url");
-            this.mHeadline  =   jsonObject.getJSONObject("headline").getString("main");
+            mWebUrl    =   jsonObject.getString("web_url");
+            mHeadline  =   jsonObject.getJSONObject("headline").getString("main");
 
             JSONArray multimedia = jsonObject.getJSONArray("multimedia");
 
@@ -77,9 +93,9 @@ public class Article {
                 if (thumbNail == null) {
                     thumbNail = multimedia.getJSONObject(0).getString("url");
                 }
-                this.mThumbNail = "http://www.nytimes.com/" + thumbNail;
+                mThumbNail = "http://www.nytimes.com/" + thumbNail;
             } else {
-                this.mThumbNail = "";
+                mThumbNail = "";
             }
 
         }catch (JSONException e) {
