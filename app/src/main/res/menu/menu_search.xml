@@ -5,10 +5,11 @@
 
     <!-- Search Menu Item -->
     <item android:id="@+id/action_search"
+        android:orderInCategory="5"
         android:title="@string/action_search"
-        android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
     <!-- Search Menu Item -->
 
     <!-- Filters Menu Item -->
