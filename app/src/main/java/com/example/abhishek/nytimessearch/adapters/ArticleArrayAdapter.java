@@ -1,6 +1,14 @@
 package com.example.abhishek.nytimessearch.adapters;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +20,9 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.example.abhishek.nytimessearch.R;
+import com.example.abhishek.nytimessearch.activities.ArticleDetailActivity;
+import com.example.abhishek.nytimessearch.activities.SearchActivity;
+import com.example.abhishek.nytimessearch.helpers.CustomTabActivityHelper;
 import com.example.abhishek.nytimessearch.models.Article;
 import com.squareup.picasso.Picasso;
 
@@ -98,7 +109,49 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void onClick(View view) {
             int pos = getLayoutPosition();
             Article article = mArticles.get(pos);
+            Log.d(LOG_TAG + " On Click", article.getHeadline());
 
+            /*Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+            intent.putExtra("ArticleData", article);
+            getContext().startActivity(intent);*/
+
+            String url = article.getWebUrl();
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_action_share);
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+
+
+            int requestCode = 100;
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // set toolbar color
+            builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+
+            builder.addDefaultShareMenuItem();
+
+            // Map the bitmap, text, and pending intent to this icon
+            // Set tint to be true so it matches the toolbar color
+            builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
+
+            CustomTabsIntent customTabsIntent = builder.build();
+            //customTabsIntent.launchUrl(getContext(), Uri.parse(url));
+
+            CustomTabActivityHelper.openCustomTab((SearchActivity)getContext(), customTabsIntent, Uri.parse(url),
+                    new CustomTabActivityHelper.CustomTabFallback() {
+                        @Override
+                        public void openUri(Activity activity, Uri uri) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            activity.startActivity(intent);
+                        }
+                    });
         }
     }
 
@@ -129,7 +182,49 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void onClick(View view) {
             int pos = getLayoutPosition();
             Article article = mArticles.get(pos);
+            Log.d(LOG_TAG + " On Click", article.getHeadline());
 
+            /*Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+            intent.putExtra("ArticleData", article);
+            getContext().startActivity(intent);*/
+
+            String url = article.getWebUrl();
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_action_share);
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+
+
+            int requestCode = 200;
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // set toolbar color
+            builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+
+            builder.addDefaultShareMenuItem();
+
+            // Map the bitmap, text, and pending intent to this icon
+            // Set tint to be true so it matches the toolbar color
+            builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
+
+            CustomTabsIntent customTabsIntent = builder.build();
+            //customTabsIntent.launchUrl(getContext(), Uri.parse(url));
+
+            CustomTabActivityHelper.openCustomTab((SearchActivity)getContext(), customTabsIntent, Uri.parse(url),
+                    new CustomTabActivityHelper.CustomTabFallback() {
+                        @Override
+                        public void openUri(Activity activity, Uri uri) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            activity.startActivity(intent);
+                        }
+                    });
         }
     }
 

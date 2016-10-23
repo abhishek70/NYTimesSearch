@@ -1,5 +1,8 @@
 package com.example.abhishek.nytimessearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.abhishek.nytimessearch.networking.ArticleClient;
 
 import org.json.JSONArray;
@@ -12,7 +15,7 @@ import java.util.ArrayList;
  * Created by abhishekdesai on 10/19/16.
  */
 
-public class Article {
+public class Article implements Parcelable {
 
     /** Tag for the log messages */
     private static final String LOG_TAG = Article.class.getSimpleName();
@@ -20,6 +23,38 @@ public class Article {
 
     // Member Variables
     private String mWebUrl, mHeadline, mThumbNail;
+
+
+    private Article(Parcel in) {
+        mHeadline   = in.readString();
+        mThumbNail  = in.readString();
+        mWebUrl     = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mHeadline);
+        parcel.writeString(mThumbNail);
+        parcel.writeString(mWebUrl);
+
+    }
+
+
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        public Article createFromParcel(Parcel source) {
+            return new Article(source);
+        }
+
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
 
 
     /**
@@ -131,6 +166,7 @@ public class Article {
         return results;
 
     }
+
 
 
 }

@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,13 +109,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                //TODO Needs to clear old articles and fetch new
-                Log.d(LOG_TAG, newText);
-
-                mSearchQuery = newText;
-
-                clearArticles();
-
                 return false;
             }
         });
@@ -142,6 +136,10 @@ public class SearchActivity extends AppCompatActivity {
      * Setting up the views
      */
     private void setupViews() {
+
+        articles = new ArrayList<>();
+        articleArrayAdapter = new ArticleArrayAdapter(this, articles);
+        rvArticles.setAdapter(articleArrayAdapter);
 
         // Set cols : portrait = 2 & Landscape = 3
         int numCols = 2;
@@ -186,7 +184,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void clearArticles() {
 
-        if (articles != null) {
+        /*if (articles != null) {
 
             int clearedCount = articles.size();
             articles.clear();
@@ -197,7 +195,7 @@ public class SearchActivity extends AppCompatActivity {
             articles = new ArrayList<>();
             articleArrayAdapter = new ArticleArrayAdapter(this, articles);
             rvArticles.setAdapter(articleArrayAdapter);
-        }
+        }*/
 
         fetchArticles(0);
     }
@@ -206,7 +204,6 @@ public class SearchActivity extends AppCompatActivity {
      * Fetching Articles Async
      */
     private void fetchArticles(final int page) {
-
 
         // Initializing Async Client
         articleClient = new ArticleClient();
@@ -219,7 +216,11 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onStart() {
                 super.onStart();
-                articlesLoader.setVisibility(View.VISIBLE);
+
+                if(page == 0) {
+                    articlesLoader.setVisibility(View.VISIBLE);
+                }
+
 
             }
 
@@ -232,11 +233,25 @@ public class SearchActivity extends AppCompatActivity {
 
                     results = response.getJSONObject("response").getJSONArray("docs");
 
-                    articles.addAll(Article.fromJsonArray(results));
+                    List<Article> newArticles = new ArrayList<Article>();
 
-                    Log.d(LOG_TAG, articles.toString());
+                    newArticles.addAll(Article.fromJsonArray(results));
 
-                    articleArrayAdapter.notifyItemRangeChanged(page * 10, 10);
+                    if (page == 0) {
+                        articles.clear();
+                        articles.addAll(newArticles);
+                        articleArrayAdapter.notifyDataSetChanged();
+                    } else {
+                        int nextItemPosition = articles.size();
+                        articles.addAll(newArticles);
+                        articleArrayAdapter.notifyItemRangeInserted(nextItemPosition, newArticles.size());
+                    }
+
+                    //articles.addAll(Article.fromJsonArray(results));
+
+                    //Log.d(LOG_TAG, articles.toString());
+
+                    //articleArrayAdapter.notifyItemRangeChanged(page * 10, 10);
                     //articleArrayAdapter.notifyItemRangeInserted(articleArrayAdapter.getItemCount(), articles.size());
                     //articleArrayAdapter.notifyDataSetChanged();
 
@@ -246,8 +261,11 @@ public class SearchActivity extends AppCompatActivity {
 
                 }
 
-                // Removing articles loader
-                articlesLoader.setVisibility(View.GONE);
+                if(page == 0) {
+                    // Removing articles loader
+                    articlesLoader.setVisibility(View.GONE);
+                }
+
 
                 // Removing swipe refresh
                 swipeRefresh.setRefreshing(false);
@@ -259,8 +277,6 @@ public class SearchActivity extends AppCompatActivity {
 
                 Log.d(LOG_TAG+" On Failure", responseString);
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-
 
                 // Removing articles loader
                 articlesLoader.setVisibility(View.GONE);
