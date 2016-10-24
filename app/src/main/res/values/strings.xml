@@ -5,4 +5,16 @@
     <string name="action_search">Search</string>
     <string name="no_connection">No connection</string>
     <string name="retry">RETRY</string>
+    <string-array name="possible_sort_ordering">
+        <item>Newest First</item>
+        <item>Oldest First</item>
+    </string-array>
+
+    <string name="begin_date">Begin Date:</string>
+    <string name="sort_order">Sort Order:</string>
+    <string name="news_desk">News Desks:</string>
+    <string name="arts">Arts</string>
+    <string name="fashion">Fashion</string>
+    <string name="sports">Sports</string>
+    <string name="apply">Apply</string>
 </resources>

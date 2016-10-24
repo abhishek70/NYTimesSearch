@@ -1,12 +1,18 @@
+/*
+Decorator which adds spacing around the tiles in a Grid layout RecyclerView. Apply to a RecyclerView with:
+    SpacesItemDecoration decoration = new SpacesItemDecoration(16);
+    mRecyclerView.addItemDecoration(decoration);
+
+Feel free to add any value you wish for SpacesItemDecoration. That value determines the amount of spacing.
+Source: http://blog.grafixartist.com/pinterest-masonry-layout-staggered-grid/
+*/
+
+
 package com.example.abhishek.nytimessearch.utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-/**
- * Created by abhishek on 10/21/16.
- */
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 

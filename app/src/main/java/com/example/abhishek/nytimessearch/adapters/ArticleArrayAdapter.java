@@ -44,8 +44,8 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String LOG_TAG = ArticleArrayAdapter.class.getSimpleName();
 
 
-    public static final int WITHOUT_THUMBNAIL = 0;
-    public static final int WITH_THUMBNAIL = 1;
+    private static final int WITHOUT_THUMBNAIL = 0;
+    private static final int WITH_THUMBNAIL = 1;
 
     /** Member Variables */
     // Store a member variable for the articles
@@ -105,15 +105,25 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
+        /**
+         * Called the cardview item is clicked
+         * @param view
+         */
         @Override
         public void onClick(View view) {
-            int pos = getLayoutPosition();
-            Article article = mArticles.get(pos);
-            Log.d(LOG_TAG + " On Click", article.getHeadline());
 
+            int pos = getLayoutPosition();
+
+            Article article = mArticles.get(pos);
+
+            /** Method 1 : Starting the Activity and loading the url content
             /*Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
             intent.putExtra("ArticleData", article);
             getContext().startActivity(intent);*/
+
+
+            /** Method 2 : Recommended for better and faster performance */
+            /** Using the Custom Chrome Tabs */
 
             String url = article.getWebUrl();
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -178,15 +188,24 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
+        /**
+         * Called the card view item is clicked
+         * @param view
+         */
         @Override
         public void onClick(View view) {
+
             int pos = getLayoutPosition();
             Article article = mArticles.get(pos);
-            Log.d(LOG_TAG + " On Click", article.getHeadline());
 
+            /** Method 1 : Starting the Activity and loading the url content
             /*Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
             intent.putExtra("ArticleData", article);
             getContext().startActivity(intent);*/
+
+
+            /** Method 2 : Recommended for better and faster performance */
+            /** Using the Custom Chrome Tabs */
 
             String url = article.getWebUrl();
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -249,26 +268,25 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         switch (viewType) {
+
             case WITH_THUMBNAIL:
+
                     View withThumbNailView = inflater.inflate(R.layout.item_article, parent, false);
                     viewHolder = new ViewHolder(withThumbNailView);
+
                 break;
+
             case WITHOUT_THUMBNAIL:
+
                     View withoutThumbNailView = inflater.inflate(R.layout.item_article_headline, parent, false);
                     viewHolder = new ViewHeadlineHolder(withoutThumbNailView);
+
                 break;
+
         }
 
         return viewHolder;
 
-        /*Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.item_article, parent, false);
-
-        // Return a new holder instance
-        return new ViewHolder(contactView);*/
     }
 
     @Override

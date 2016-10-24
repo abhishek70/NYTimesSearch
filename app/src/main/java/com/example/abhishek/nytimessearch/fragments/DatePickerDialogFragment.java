@@ -1,0 +1,89 @@
+package com.example.abhishek.nytimessearch.fragments;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+
+import com.example.abhishek.nytimessearch.R;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+/**
+ * Created by abhishekdesai on 10/24/16.
+ */
+
+public class DatePickerDialogFragment extends DialogFragment {
+
+    @BindView(R.id.dpBeginDate) DatePicker dpBeginDate;
+    Unbinder unbinder;
+
+    public interface DatePickerDialogListener {
+        void onDatePicked(Calendar calendar);
+    }
+
+    public DatePickerDialogFragment() {
+    }
+
+    public static DatePickerDialogFragment newInstance(String title) {
+        DatePickerDialogFragment fragment = new DatePickerDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_date_picker, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Fetch arguments from bundle and set title
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        dpBeginDate.init(
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                (dp, y, m, d) -> sendBackResult()
+        );
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    public void sendBackResult() {
+        // Notice the use of `getTargetFragment` which will be set when the dialog is displayed
+
+        int year = dpBeginDate.getYear();
+        int month = dpBeginDate.getMonth();
+        int day = dpBeginDate.getDayOfMonth();
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(year, month, day);
+
+        DatePickerDialogListener listener = (DatePickerDialogListener) getTargetFragment();
+        listener.onDatePicked(calendar);
+        dismiss();
+    }
+
+}

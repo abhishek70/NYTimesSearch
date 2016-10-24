@@ -25,11 +25,61 @@ public class Article implements Parcelable {
     private String mWebUrl, mHeadline, mThumbNail;
 
 
+    /**
+     * Constructor
+     * @param jsonObject
+     */
+    private Article(JSONObject jsonObject) {
+
+        try {
+
+            mWebUrl    =   jsonObject.getString("web_url");
+            mHeadline  =   jsonObject.getJSONObject("headline").getString("main");
+
+            JSONArray multimedia = jsonObject.getJSONArray("multimedia");
+
+            if(multimedia.length() > 0) {
+                String thumbNail = null;
+
+                for(int j = 0; j < multimedia.length(); j++) {
+
+                    JSONObject multimediaJson = multimedia.getJSONObject(j);
+
+                    if(multimediaJson.getString("subtype") == "thumbnail") {
+                        thumbNail = multimediaJson.getString("url");
+                        break;
+                    }
+                }
+
+                //JSONObject multimediaJson = multimedia.getJSONObject(0);
+                //this.mThumbNail = "http://www.nytimes.com/" + multimediaJson.getString("url");
+
+                if (thumbNail == null) {
+                    thumbNail = multimedia.getJSONObject(0).getString("url");
+                }
+                mThumbNail = "http://www.nytimes.com/" + thumbNail;
+            } else {
+                mThumbNail = "";
+            }
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Constructor
+     * This method will retrieve the values
+     * @param in
+     */
     private Article(Parcel in) {
         mHeadline   = in.readString();
         mThumbNail  = in.readString();
         mWebUrl     = in.readString();
     }
+
 
     @Override
     public int describeContents() {
@@ -37,6 +87,11 @@ public class Article implements Parcelable {
         return 0;
     }
 
+    /**
+     * This method will save the values
+     * @param parcel
+     * @param i
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mHeadline);
@@ -45,12 +100,25 @@ public class Article implements Parcelable {
 
     }
 
-
+    /**
+     * Creating the constant for Parcelable
+     */
     public static final Creator<Article> CREATOR = new Creator<Article>() {
+
+        /**
+         * This will call the new constructor created above
+         * @param source
+         * @return
+         */
         public Article createFromParcel(Parcel source) {
             return new Article(source);
         }
 
+        /**
+         * Returns new array for the Article
+         * @param size
+         * @return
+         */
         public Article[] newArray(int size) {
             return new Article[size];
         }
@@ -99,48 +167,6 @@ public class Article implements Parcelable {
 
 
     /**
-     * Constructor
-     * @param jsonObject
-     */
-    private Article(JSONObject jsonObject) {
-
-        try {
-
-            mWebUrl    =   jsonObject.getString("web_url");
-            mHeadline  =   jsonObject.getJSONObject("headline").getString("main");
-
-            JSONArray multimedia = jsonObject.getJSONArray("multimedia");
-
-            if(multimedia.length() > 0) {
-                String thumbNail = null;
-
-                for(int j = 0; j < multimedia.length(); j++) {
-
-                    JSONObject multimediaJson = multimedia.getJSONObject(j);
-
-                    if(multimediaJson.getString("subtype") == "thumbnail") {
-                        thumbNail = multimediaJson.getString("url");
-                        break;
-                    }
-                }
-                //JSONObject multimediaJson = multimedia.getJSONObject(0);
-                //this.mThumbNail = "http://www.nytimes.com/" + multimediaJson.getString("url");
-                if (thumbNail == null) {
-                    thumbNail = multimedia.getJSONObject(0).getString("url");
-                }
-                mThumbNail = "http://www.nytimes.com/" + thumbNail;
-            } else {
-                mThumbNail = "";
-            }
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
      * Factory method for converting Article JSONArray into JSONObject - Deserialize
      * @param jsonArray
      * @return
@@ -166,7 +192,6 @@ public class Article implements Parcelable {
         return results;
 
     }
-
 
 
 }

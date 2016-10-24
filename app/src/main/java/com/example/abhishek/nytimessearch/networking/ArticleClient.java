@@ -3,15 +3,13 @@ package com.example.abhishek.nytimessearch.networking;
 import android.util.Log;
 
 import com.example.abhishek.nytimessearch.utils.Config;
-import com.example.abhishek.nytimessearch.utils.SearchParam;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-
 /**
  * Created by abhishek on 10/19/16.
+ * This class will manage all networking calls
  */
 
 public class ArticleClient {
@@ -43,29 +41,23 @@ public class ArticleClient {
         // Setting URL parameters
         RequestParams params = new RequestParams("api-key", Config.NYTIMES_ARTICLE_API_KEY);
 
-        Log.d(LOG_TAG + " Page", String.valueOf(searchPage));
-        Log.d(LOG_TAG + " Query", searchQuery);
-        Log.d(LOG_TAG + " Date", searchDate);
-        Log.d(LOG_TAG + " Order", searchOrder);
-
-
+        // Page
         params.put("page", searchPage);
 
-
-
-
+        // Date
         if(searchDate != "") {
             params.put("begin_date", searchDate);
         }
 
+        // Order
         if(searchOrder != "") {
             params.put("sort", searchOrder);
         }
 
+        // Query
         if(searchQuery != "") {
-            params.put("q", searchQuery);
+            params.put("fq", searchQuery);
         }
-
 
         // Prep and executing API Call
         client.get(url, params, handler);

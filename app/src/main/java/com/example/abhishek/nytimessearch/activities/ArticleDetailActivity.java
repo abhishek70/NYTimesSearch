@@ -24,8 +24,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
     private static final String LOG_TAG = ArticleDetailActivity.class.getSimpleName();
 
 
-
+    // Web View
     @BindView(R.id.webview) WebView webView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +36,24 @@ public class ArticleDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
+        // Load Web View
         initiateWebView();
     }
 
 
     private void initiateWebView() {
 
+        // Fetching Article object through Parcelable
         Article article = (Article) getIntent().getParcelableExtra("ArticleData");
-
-        Log.d(LOG_TAG, article.getHeadline());
-
 
         // Configure related browser settings
         webView.getSettings().setLoadsImagesAutomatically(true);
 
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
         // Configure the client to use when opening URLs
         webView.setWebViewClient(new WebBrowser());
+
         // Load the initial URL
         webView.loadUrl(article.getWebUrl());
 
