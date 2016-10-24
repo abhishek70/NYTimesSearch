@@ -47,7 +47,10 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-Coming soon !!!
+![Screenshot](https://github.com/abhishek70/NYTimesSearch/blob/master/screenshots/Start_up_screen.gif)
+![Screenshot](https://github.com/abhishek70/NYTimesSearch/blob/master/screenshots/Search_Activity.gif)
+![Screenshot](https://github.com/abhishek70/NYTimesSearch/blob/master/screenshots/Fragment_Chrome_tab.gif)
+
 
 ## Notes
 
